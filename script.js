@@ -3,29 +3,40 @@
  *--------------------------------------------------------------------------------------------*/
 
 window.onload = () => {
-    const Total_number = 200; // 在这里更改一共有多少抽奖人数
+    const Total_number = 50; // 在这里更改一共有多少抽奖人数
     const enemies = [-1]; // 填入你不希望中奖的序号，数组，-1为不启用
-    const specialNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // 特殊号码数组，指定哪些号码可以多次中奖
-    const excludeRangeStart = -1; // 排除数字范围的开始，-1为不启用
-    const excludeRangeEnd = -1; // 排除数字范围的结束，-1为不启用
 
+    // 新增特殊号码和中奖轮次的定义
+    const specialNumbers = [
+        { number: 1, rounds: [1, 3] }, // 第一个特殊号码在第八轮和第十轮中奖
+        { number: 2, rounds: [2, 5] }   // 第二个特殊号码在第二轮和第五轮中奖
+    ];
+
+    // 最大中奖次数接口，默认为2次
+    let maxWins = 2;
+    const numberToDrawInput = document.getElementById("number-to-draw");
     const startButton = document.getElementById('start-button');
     const lotteryNumber = document.getElementById('lottery-number');
     const drawNumber = document.getElementById("draw-number");
-    const numberToDrawInput = document.getElementById("number-to-draw");
     const wonNumbers = document.getElementById("won-numbers");
 
-    let numbers = Array.from({ length: Total_number }, (_, i) => i + 1)
-        .filter(n => !enemies.includes(n) && !(n >= excludeRangeStart && n <= excludeRangeEnd)); // 创建数组
+    // 创建所有可能的抽奖号码数组
+    let numbers = Array.from({ length: Total_number }, (_, i) => i + 1).filter(n => !enemies.includes(n));
 
-    let drawCount = 0; // 抽奖次数
+    let drawCount = 0; // 抽奖轮次
     let wonNumbersList = [];
-    let interval;
+    let winCounts = Array(Total_number).fill(0); // 记录每个号码的中奖次数
 
     startButton.onclick = () => {
-        const numberToDraw = parseInt(numberToDrawInput.value, 10) || i;
-        if (numbers.length === 0 && specialNumbers.length === 0) {
-            alert("所有编号已经抽完了呦ଘ(੭ˊᵕˋ)੭");
+        const numberToDraw = parseInt(numberToDrawInput.value, 10) || 1;
+
+        if (numbers.length === 0) {
+            alert("所有编号已经抽完了ଘ(੭ˊᵕˋ)੭");
+            return;
+        }
+
+        if (numbers.filter(n => winCounts[n - 1] < maxWins).length < numberToDraw) {
+            alert("剩余码码不够抽奖了ଘ(੭ˊᵕˋ)੭");
             return;
         }
 
@@ -43,27 +54,46 @@ window.onload = () => {
 
         setTimeout(() => {
             clearInterval(interval);
+
             let winningNumbers = [];
 
-            for (let i = 0; i < numberToDraw; i++) {
-                const randomIndex = Math.floor(Math.random() * numbers.length);
-                let winningNumber = numbers[randomIndex];
-
-                // 如果中奖号码是特殊号码，则不移除它
-                if (!specialNumbers.includes(winningNumber)) {
-                    numbers.splice(randomIndex, 1); // 移除已中奖的非特殊号码
+            // 检查特殊号码是否在当前轮次中奖
+            specialNumbers.forEach(special => {
+                if (special.rounds.includes(drawCount) && winCounts[special.number - 1] < maxWins) {
+                    winningNumbers.push(special.number);
+                    winCounts[special.number - 1]++;
                 }
+            });
 
+            // 补充普通号码
+            for (let i = winningNumbers.length; i < numberToDraw; i++) {
+                let availableNumbers = numbers.filter(n => winCounts[n - 1] < maxWins);
+                const winningNumber = availableNumbers.splice(Math.floor(Math.random() * availableNumbers.length), 1)[0];
                 winningNumbers.push(winningNumber);
+                winCounts[winningNumber - 1]++;
             }
 
+            // 将特殊号码放置在中奖组的随机位置
+            specialNumbers.forEach(special => {
+                if (special.rounds.includes(drawCount)) {
+                    let index = winningNumbers.indexOf(special.number);
+                    if (index !== -1) {
+                        winningNumbers.splice(index, 1); // 移除原始位置
+                        let randomIndex = Math.floor(Math.random() * winningNumbers.length);
+                        winningNumbers.splice(randomIndex, 0, special.number); // 插入随机位置
+                    }
+                }
+            });
+
             wonNumbersList.push(...winningNumbers);
-            lotteryNumber.textContent = winningNumbers.join('，'); // 在回调函数之前调用
+            lotteryNumber.textContent = winningNumbers.join('，');
             wonNumbers.textContent = `已抽到号码：${wonNumbersList.join('、')}`;
-            // alert(`中奖编号是: ${winningNumbers.join(',')}`);
+
         }, 3000); // 3秒后停止
     };
 };
+
+
 
 function generateFeather() {
     const feather = document.createElement('div');
