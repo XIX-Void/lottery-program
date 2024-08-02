@@ -3,10 +3,11 @@
  *--------------------------------------------------------------------------------------------*/
 
 window.onload = () => {
-    const Total_number = 72; //在这里更改一共有多少抽奖人数
+    const Total_number = 200; //在这里更改一共有多少抽奖人数
     const enemies = [-1]; //填入你不希望中奖的序号，数组，-1为不启用
-    const specialDrawNumber = -1; //特定的抽奖轮次，-1为不启用
-    const specialNumber = -1; //特定的必中号码，-1为不启用
+    const specialNumbers = [1, 2, 3]; // 特殊号码数组，指定哪些号码可以多次中奖
+    const specialDrawNumber = 2; //特定的抽奖轮次，-1为不启用
+    const specialNumber = 1; //特定的必中号码，-1为不启用
     const excludeRangeStart = -1; //排除数字范围的开始，-1为不启用
     const excludeRangeEnd = -1; //排除数字范围的结束，-1为不启用
 
@@ -17,13 +18,13 @@ window.onload = () => {
     const wonNumbers = document.getElementById("won-numbers");
     
     //生成羽毛
-    setInterval(generateFeather, 1500); // 每隔1500毫秒（1.5秒）生成一个新的羽毛
+    //setInterval(generateFeather, 1500); // 每隔1500毫秒（1.5秒）生成一个新的羽毛
 
     //有规律时使用如下numbers
-    //let numbers = Array.from({length: Total_number}, (_, i) => i + 1).filter(n => !enemies.includes(n) && !(n >= excludeRangeStart && n <= excludeRangeEnd)); // 创建数组
+    let numbers = Array.from({length: Total_number}, (_, i) => i + 1).filter(n => !enemies.includes(n) && !(n >= excludeRangeStart && n <= excludeRangeEnd)); // 创建数组
     
     //无规律时直接创建数组
-    let numbers = [712,88,258,151,428,864,9,888,666,777,105,914,121,528,119,31,748,72,7,726,23,593,113,429,611,92,162,66,416,220,930,326,99,678,729,818,123,618,857,327,114,403,924,703,668,686,688,235,319,182,749,414,602,668,740,96,213,0,188,617,766,456,419,104,117,726,37,745,67,520,613];
+    //let numbers = ["A","B","C","D","E","F","G"];
 
     let drawCount = 0; //抽奖次数
     let wonNumbersList = [];

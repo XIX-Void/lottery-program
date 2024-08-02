@@ -12,7 +12,7 @@ body {
     position: relative;
     overflow: hidden;
     
-    background-image: url('image/background/深圳THUP大合照.png');
+    background-image: url('image/background/2米x1.5米.jpg');
     /* background-color: #f0f0f0; */
     background-size: cover;
     background-position: center; /* 居中图片 */
@@ -27,7 +27,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.779);
+    background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
 
