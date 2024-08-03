@@ -8,8 +8,13 @@
 
 
 window.onload = () => {
+
+
+
     const Total_number = 50; // 在这里更改一共有多少抽奖人数
     let maxWins = 2; // 每人最大中奖次数
+
+
 
     // 创建画布元素
     const numberToDrawInput = document.getElementById("number-to-draw");
@@ -18,6 +23,8 @@ window.onload = () => {
     const drawNumber = document.getElementById("draw-number");
     const wonNumbers = document.getElementById("won-numbers");
 
+
+
     // 创建所有可能的抽奖号码数组
     const enemies = [-1];
     let numbers = Array.from({ length: Total_number }, (_, i) => i + 1).filter(n => !enemies.includes(n));
@@ -25,6 +32,8 @@ window.onload = () => {
     let wonNumbersList = [];
     let winCounts = Array(Total_number).fill(0); // 记录每个号码的中奖次数
 
+
+    
     const specialNumbers = [
         { number: 25, rounds: [3, 8] },
         { number: 3, rounds: [4, 8] }
