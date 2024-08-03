@@ -8,13 +8,8 @@
 
 
 window.onload = () => {
-
-
-
     const Total_number = 50; // 在这里更改一共有多少抽奖人数
     let maxWins = 2; // 每人最大中奖次数
-
-
 
     //创建画布元素
     const numberToDrawInput = document.getElementById("number-to-draw");
@@ -23,8 +18,6 @@ window.onload = () => {
     const drawNumber = document.getElementById("draw-number");
     const wonNumbers = document.getElementById("won-numbers");
 
-
-
     // 创建所有可能的抽奖号码数组
     const enemies = [-1];
     let numbers = Array.from({ length: Total_number }, (_, i) => i + 1).filter(n => !enemies.includes(n));
@@ -32,13 +25,10 @@ window.onload = () => {
     let wonNumbersList = [];
     let winCounts = Array(Total_number).fill(0); // 记录每个号码的中奖次数
 
-
-
     const specialNumbers = [
         { number: 25, rounds: [3, 8] },
         { number: 3, rounds: [4, 8] }
     ];
-
 
     let specialWinCounts = {}; // 记录特殊号码的中奖轮次和次数
     specialNumbers.forEach(special => {
@@ -46,7 +36,6 @@ window.onload = () => {
     });
 
     startButton.onclick = () => {
-        
         const numberToDraw = parseInt(numberToDrawInput.value, 10) || 1;
 
         if (numbers.length === 0) {
@@ -61,6 +50,7 @@ window.onload = () => {
 
         drawCount++;
         drawNumber.textContent = `抽奖轮次：${drawCount}`;
+        console.log(`开始第${drawCount}轮抽奖`);
 
         let interval = setInterval(() => {
             let displayNumbers = [];
@@ -79,34 +69,45 @@ window.onload = () => {
             let availableNumbers = numbers.filter(n => winCounts[n - 1] < maxWins);
 
             // 检查特殊号码是否在当前轮次中奖
+            console.log("检查特殊号码是否在当前轮次中奖");
             specialNumbers.forEach(special => {
-                if (special.rounds.includes(drawCount) && specialWinCounts[special.number] < special.rounds.length) {
+                if (special.rounds.includes(drawCount) && winCounts[special.number - 1] < maxWins) {
                     specialWinners.push(special.number);
-                    specialWinCounts[special.number]++;
+                    winCounts[special.number - 1]++;
+                    console.log(`特殊号码${special.number}在第${drawCount}轮中奖`);
+                } else {
+                    console.log(`特殊号码${special.number}不在第${drawCount}轮或已经达到最大中奖次数`);
                 }
             });
 
             // 补充普通号码直到达到抽奖数目
-            for (let i = 0; i < numberToDraw - specialWinners.length; i++) {
+            let numSpecialWinners = specialWinners.length;
+            for (let i = 0; i < numberToDraw - numSpecialWinners; i++) {
                 const winningNumber = availableNumbers.splice(Math.floor(Math.random() * availableNumbers.length), 1)[0];
                 nonSpecialWinners.push(winningNumber);
                 winCounts[winningNumber - 1]++;
             }
 
-            // 将特殊中奖号码和普通中奖号码混合，并随机打乱顺序
+            // 将特殊中奖号码和普通中奖号码分开处理，确保特殊号码不会重复
             let winningNumbers = specialWinners.concat(nonSpecialWinners);
+
+            // 随机打乱中奖号码的顺序
             for (let i = winningNumbers.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [winningNumbers[i], winningNumbers[j]] = [winningNumbers[j], winningNumbers[i]];
             }
 
+            // 更新中奖列表
             wonNumbersList.push(...winningNumbers);
             lotteryNumber.textContent = winningNumbers.join('，');
             wonNumbers.textContent = `已抽到号码：${wonNumbersList.join('、')}`;
+            console.log(`第${drawCount}轮中奖号码：${winningNumbers.join('，')}`);
 
-        }, 400); // 3秒后停止
+        }, 300); // 0.3秒后停止
     };
 };
+
+
 
 
 
