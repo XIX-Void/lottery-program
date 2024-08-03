@@ -38,13 +38,14 @@ window.onload = () => {
     startButton.onclick = () => {
         const numberToDraw = parseInt(numberToDrawInput.value, 10) || 1;
 
-        if (numbers.length === 0) {
+        if (numbers.filter(n => winCounts[n - 1] < maxWins).length === specialNumbers.length) {
             alert("所有编号已经抽完了ଘ(੭ˊᵕˋ)੭");
             return;
         }
 
-        if (numbers.filter(n => winCounts[n - 1] < maxWins).length < numberToDraw) {
-            alert("剩余码码不够抽奖了ଘ(੭ˊᵕˋ)੭");
+        if (numbers.filter(n => winCounts[n - 1] < maxWins).length < numberToDraw + specialNumbers.length) {
+            temp = numbers.filter(n => winCounts[n - 1] < maxWins).length - 2;
+            alert("剩余码码不够抽奖了ଘ(੭ˊᵕˋ)੭，下次最大" + temp + "个~");
             return;
         }
 
