@@ -71,11 +71,11 @@ window.onload = () => {
             );
 
             // 检查特殊号码是否在当前轮次中奖
-            console.log("检查特殊号码是否在当前轮次中奖");
+            //console.log("检查特殊号码是否在当前轮次中奖");
             specialNumbers.forEach(special => {
                 if (special.rounds.includes(drawCount)) {
                     specialWinners.push(special.number);
-                    console.log(`特殊号码${special.number}在第${drawCount}轮中奖`);
+                    //console.log(`特殊号码${special.number}在第${drawCount}轮中奖`);
                 }
             });
 
