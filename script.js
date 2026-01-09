@@ -160,6 +160,13 @@ window.onload = () => {
                 }
             });
 
+            // 如果单次抽取数量少于应该出现的特殊号码数量，则只保留排名在前的几个
+            if (specialWinners.length > numberToDraw) {
+                // 按号码大小排序，保留排名在前的numberToDraw个
+                specialWinners.sort((a, b) => a - b);
+                specialWinners = specialWinners.slice(0, numberToDraw);
+            }
+
             // 补充普通号码直到达到抽奖数目
             let numSpecialWinners = specialWinners.length;
             for (let i = 0; i < numberToDraw - numSpecialWinners; i++) {
