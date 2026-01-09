@@ -61,10 +61,27 @@ h1{
 button {
     padding: 10px 20px;
     font-size: 2em;
+    margin: 0 10px;
 }
 
-#number-to-draw{
-    font-size: 1em;
+#clear-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#clear-button:hover {
+    background-color: #c82333;
+}
+
+#draw-round,
+#number-to-draw {
+    font-size: 1.5em;
+    width: 100px;
+    text-align: center;
+    padding: 5px;
+    box-sizing: border-box;
 }
 
 .input-container{

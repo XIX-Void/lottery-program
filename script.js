@@ -18,7 +18,9 @@ window.onload = () => {
 
     // 创建画布元素
     const numberToDrawInput = document.getElementById("number-to-draw");
+    const drawRoundInput = document.getElementById("draw-round");
     const startButton = document.getElementById('start-button');
+    const clearButton = document.getElementById('clear-button');
     const lotteryNumber = document.getElementById('lottery-number');
     const drawNumber = document.getElementById("draw-number");
     const wonNumbers = document.getElementById("won-numbers");
@@ -28,10 +30,52 @@ window.onload = () => {
     // 创建所有可能的抽奖号码数组
     const enemies = [-1];
     let numbers = Array.from({ length: Total_number }, (_, i) => i + 1).filter(n => !enemies.includes(n));
-    let drawCount = 0; // 抽奖轮次
+    
+    // 从 localStorage 加载保存的数据
+    const loadSavedData = () => {
+        const savedWonNumbers = localStorage.getItem('lottery_wonNumbers');
+        const savedWinCounts = localStorage.getItem('lottery_winCounts');
+        const savedDrawRound = localStorage.getItem('lottery_drawRound');
+        
+        if (savedWonNumbers) {
+            wonNumbersList = JSON.parse(savedWonNumbers);
+        } else {
+            wonNumbersList = [];
+        }
+        
+        if (savedWinCounts) {
+            winCounts = JSON.parse(savedWinCounts);
+            // 确保数组长度正确
+            if (winCounts.length !== Total_number) {
+                winCounts = Array(Total_number).fill(0);
+            }
+        } else {
+            winCounts = Array(Total_number).fill(0);
+        }
+        
+        if (savedDrawRound) {
+            drawRoundInput.value = savedDrawRound;
+            drawNumber.textContent = `抽奖轮次：${savedDrawRound}`;
+        }
+        
+        // 更新已抽到号码的显示
+        if (wonNumbersList.length > 0) {
+            wonNumbers.textContent = `已抽到号码：${wonNumbersList.join('、')}`;
+        }
+    };
+    
+    // 保存数据到 localStorage
+    const saveData = () => {
+        localStorage.setItem('lottery_wonNumbers', JSON.stringify(wonNumbersList));
+        localStorage.setItem('lottery_winCounts', JSON.stringify(winCounts));
+        localStorage.setItem('lottery_drawRound', drawRoundInput.value);
+    };
+    
     let wonNumbersList = [];
     let winCounts = Array(Total_number).fill(0); // 记录每个号码的中奖次数
-
+    
+    // 初始化时加载保存的数据
+    loadSavedData();
 
     
     const specialNumbers = [
@@ -44,8 +88,35 @@ window.onload = () => {
         specialWinRounds[special.number] = special.rounds;
     });
 
+    // 清除所有数据
+    const clearAllData = () => {
+        if (confirm("确定要清除所有抽奖数据吗？此操作不可恢复！")) {
+            // 清除 localStorage
+            localStorage.removeItem('lottery_wonNumbers');
+            localStorage.removeItem('lottery_winCounts');
+            localStorage.removeItem('lottery_drawRound');
+            
+            // 重置变量
+            wonNumbersList = [];
+            winCounts = Array(Total_number).fill(0);
+            
+            // 重置显示
+            drawRoundInput.value = 1;
+            drawNumber.textContent = `抽奖轮次：0`;
+            lotteryNumber.textContent = '--';
+            wonNumbers.textContent = '已抽到号码：';
+            
+            alert("数据已清除！");
+        }
+    };
+
+    // 绑定清除按钮事件
+    clearButton.onclick = clearAllData;
+
     startButton.onclick = () => {
         const numberToDraw = parseInt(numberToDrawInput.value, 10) || 1;
+        // 从输入框读取当前轮次
+        let drawCount = parseInt(drawRoundInput.value, 10) || 1;
 
         if (numbers.filter(n => winCounts[n - 1] < maxWins).length === specialNumbers.length) {
             alert("所有编号已经抽完了ଘ(੭ˊᵕˋ)੭");
@@ -58,7 +129,7 @@ window.onload = () => {
             return;
         }
 
-        drawCount++;
+        // 更新显示
         drawNumber.textContent = `抽奖轮次：${drawCount}`;
         console.log(`开始第${drawCount}轮抽奖`);
 
@@ -111,6 +182,14 @@ window.onload = () => {
             lotteryNumber.textContent = winningNumbers.join('，');
             wonNumbers.textContent = `已抽到号码：${wonNumbersList.join('、')}`;
             console.log(`第${drawCount}轮中奖号码：${winningNumbers.join('，')}`);
+
+            // 抽奖完成后自动更新轮次（递增）
+            drawCount++;
+            drawRoundInput.value = drawCount;
+            drawNumber.textContent = `抽奖轮次：${drawCount}`;
+            
+            // 保存数据到 localStorage
+            saveData();
 
         }, 3000); // 0.3秒后停止
     };
