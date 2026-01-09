@@ -11,7 +11,7 @@ window.onload = () => {
 
 
 
-    const Total_number = 50; // 在这里更改一共有多少抽奖人数
+    const Total_number = 1112; // 在这里更改一共有多少抽奖人数
     let maxWins = 2; // 每人最大中奖次数
 
 
@@ -35,8 +35,8 @@ window.onload = () => {
 
     
     const specialNumbers = [
-        { number: 25, rounds: [3, 8] },
-        { number: 3, rounds: [4, 8] }
+        { number: 422, rounds: [2] },
+        { number: 458, rounds: [2] }
     ];
 
     let specialWinRounds = {}; // 记录特殊号码的中奖轮次
