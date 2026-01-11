@@ -94,8 +94,11 @@ window.onload = () => {
     saveModeCheckbox.addEventListener('change', () => {
         localStorage.setItem('lottery_saveMode', saveModeCheckbox.checked.toString());
         
-        // 如果关闭保存模式，清除已保存的数据
-        if (!saveModeCheckbox.checked) {
+        if (saveModeCheckbox.checked) {
+            // 如果开启保存模式，立即保存当前数据
+            saveData();
+        } else {
+            // 如果关闭保存模式，清除已保存的数据
             localStorage.removeItem('lottery_wonNumbers');
             localStorage.removeItem('lottery_winCounts');
             localStorage.removeItem('lottery_drawRound');
@@ -107,6 +110,20 @@ window.onload = () => {
     
     // 初始化时加载保存的数据
     loadSavedData();
+    
+    // 当轮次输入框改变时，如果保存模式开启，立即保存
+    drawRoundInput.addEventListener('change', () => {
+        if (saveModeCheckbox.checked) {
+            saveData();
+        }
+    });
+    
+    // 当轮次输入框输入时也保存（实时保存）
+    drawRoundInput.addEventListener('input', () => {
+        if (saveModeCheckbox.checked) {
+            saveData();
+        }
+    });
 
     
     const specialNumbers = [
