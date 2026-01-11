@@ -21,6 +21,7 @@ window.onload = () => {
     const drawRoundInput = document.getElementById("draw-round");
     const startButton = document.getElementById('start-button');
     const clearButton = document.getElementById('clear-button');
+    const saveModeCheckbox = document.getElementById('save-mode');
     const lotteryNumber = document.getElementById('lottery-number');
     const drawNumber = document.getElementById("draw-number");
     const wonNumbers = document.getElementById("won-numbers");
@@ -31,8 +32,21 @@ window.onload = () => {
     const enemies = [-1];
     let numbers = Array.from({ length: Total_number }, (_, i) => i + 1).filter(n => !enemies.includes(n));
     
+    // 加载保存模式状态（复选框状态本身需要保存）
+    const savedSaveMode = localStorage.getItem('lottery_saveMode');
+    if (savedSaveMode !== null) {
+        saveModeCheckbox.checked = savedSaveMode === 'true';
+    }
+    
     // 从 localStorage 加载保存的数据
     const loadSavedData = () => {
+        // 只有在保存模式开启时才加载数据
+        if (!saveModeCheckbox.checked) {
+            wonNumbersList = [];
+            winCounts = Array(Total_number).fill(0);
+            return;
+        }
+        
         const savedWonNumbers = localStorage.getItem('lottery_wonNumbers');
         const savedWinCounts = localStorage.getItem('lottery_winCounts');
         const savedDrawRound = localStorage.getItem('lottery_drawRound');
@@ -66,10 +80,27 @@ window.onload = () => {
     
     // 保存数据到 localStorage
     const saveData = () => {
+        // 只有在保存模式开启时才保存数据
+        if (!saveModeCheckbox.checked) {
+            return;
+        }
+        
         localStorage.setItem('lottery_wonNumbers', JSON.stringify(wonNumbersList));
         localStorage.setItem('lottery_winCounts', JSON.stringify(winCounts));
         localStorage.setItem('lottery_drawRound', drawRoundInput.value);
     };
+    
+    // 保存模式复选框状态改变时，保存复选框状态
+    saveModeCheckbox.addEventListener('change', () => {
+        localStorage.setItem('lottery_saveMode', saveModeCheckbox.checked.toString());
+        
+        // 如果关闭保存模式，清除已保存的数据
+        if (!saveModeCheckbox.checked) {
+            localStorage.removeItem('lottery_wonNumbers');
+            localStorage.removeItem('lottery_winCounts');
+            localStorage.removeItem('lottery_drawRound');
+        }
+    });
     
     let wonNumbersList = [];
     let winCounts = Array(Total_number).fill(0); // 记录每个号码的中奖次数
