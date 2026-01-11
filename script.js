@@ -177,6 +177,11 @@ window.onload = () => {
             return;
         }
 
+        // 禁用开始抽奖按钮，防止重复点击
+        startButton.disabled = true;
+        startButton.style.opacity = '0.6';
+        startButton.style.cursor = 'not-allowed';
+
         // 更新显示
         drawNumber.textContent = `抽奖轮次：${drawCount}`;
         console.log(`开始第${drawCount}轮抽奖`);
@@ -245,8 +250,13 @@ window.onload = () => {
             
             // 保存数据到 localStorage
             saveData();
+            
+            // 重新启用开始抽奖按钮
+            startButton.disabled = false;
+            startButton.style.opacity = '1';
+            startButton.style.cursor = 'pointer';
 
-        }, 3000); // 0.3秒后停止
+        }, 3000); // 3秒后停止
     };
 };
 
