@@ -90,7 +90,7 @@ window.onload = () => {
 
     // 清除所有数据
     const clearAllData = () => {
-        if (confirm("确定要清除所有抽奖数据吗？此操作不可恢复！")) {
+        if (confirm("清除所有抽奖数据，此操作不可逆噢ଘ(੭ˊᵕˋ)੭")) {
             // 清除 localStorage
             localStorage.removeItem('lottery_wonNumbers');
             localStorage.removeItem('lottery_winCounts');
@@ -106,7 +106,7 @@ window.onload = () => {
             lotteryNumber.textContent = '--';
             wonNumbers.textContent = '已抽到号码：';
             
-            alert("数据已清除！");
+            alert("数据没了噢ଘ(੭ˊᵕˋ)੭");
         }
     };
 

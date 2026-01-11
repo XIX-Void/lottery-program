@@ -17,18 +17,21 @@
     </div>
 
     <div class="input-container">
-        <label for="draw-round">抽奖轮次：</label>
-        <input type="number" id="draw-round" min="1" value="1">
-        <br><br>
         <label for="number-to-draw">每次抽取数量：</label>
         <input type="number" id="number-to-draw" min="1" max="1000" value="1">
     </div>
     
+    <div class="button-container">
         <button id="start-button">开始抽奖</button>
-        <button id="clear-button">清除数据</button>
-        <!--  -->
-        <div id="won-numbers">已抽到号码：</div>
     </div>
+    
+    <div class="auxiliary-controls">
+        <button id="clear-button">清除数据</button>
+        <label for="draw-round">抽奖轮次：</label>
+        <input type="number" id="draw-round" min="1" value="1">
+    </div>
+    
+    <div id="won-numbers">已抽到号码：</div>
 
     <div class="footer"> </div>
     <script src="script.js"></script>
